@@ -37,8 +37,8 @@ Once you have these installed, you can follow these steps:
 1. Clone this repository to your local machine.
 2. Run `npm install` to install the dependencies.
 3. Create a new PostgreSQL database and update the `DB_NAME`, `DB_USER`, and `DB_PASSWORD` variables in the `.env` file with your database credentials.
-4. Run `npm run prisma:generate` to generate the Prisma schema.
-5. Run `npm run prisma:migrate` to apply the Prisma migrations.
+4. Run `npm run migrate` to apply the Prisma migrations.
+5. Run `npm run seed` to seed the database.
 6. Run `npm run dev` to start the development server.
 
 ## Features
