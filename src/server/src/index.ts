@@ -13,8 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', router);
-app.use('/users', userRouter);
+app.use('/api/vacancies', router);
+app.use('/api/users', userRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
