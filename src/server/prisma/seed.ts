@@ -1,6 +1,6 @@
-import { PrismaClient, Role } from '.prisma/client';
-import { faker } from '@faker-js/faker';
-import { v4 as uuid } from 'uuid';
+import { PrismaClient, Role } from ".prisma/client";
+import { faker } from "@faker-js/faker";
+import { v4 as uuid } from "uuid";
 
 const prisma = new PrismaClient();
 
@@ -18,9 +18,9 @@ async function main() {
     title: faker.person.jobTitle(),
     description: faker.lorem.paragraph(),
     englishLevel: faker.helpers.arrayElement([
-      'Beginner',
-      'Intermediate',
-      'Advanced',
+      "Beginner",
+      "Intermediate",
+      "Advanced",
     ]),
     grade: faker.number.int({ min: 1, max: 10 }),
     tags: [faker.person.jobArea(), faker.person.jobType()],
@@ -35,9 +35,9 @@ async function main() {
     ),
   }));
 
-  const users = await prisma.user.createMany({ data: usersData });
-  const vacancies = await prisma.vacancy.createMany({ data: vacanciesData });
-  const applications = await prisma.application.createMany({
+  await prisma.user.createMany({ data: usersData });
+  await prisma.vacancy.createMany({ data: vacanciesData });
+  await prisma.application.createMany({
     data: applicationsData,
   });
 }
