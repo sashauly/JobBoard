@@ -1,20 +1,13 @@
-import { Router } from 'express';
-import vacancyController from '../controllers/vacancy.controller';
+import { Router } from "express";
+import vacancyController from "../controllers/vacancy.controller";
 
-const router = Router();
+const vacancyRouter = Router();
 
-router.get('/', (req, res) => vacancyController.getAllVacancies(req, res));
+vacancyRouter.get("/", vacancyController.getAllVacancies);
+vacancyRouter.get("/:id", vacancyController.getVacancyById);
+vacancyRouter.post("/", vacancyController.createVacancy);
+vacancyRouter.put("/:id", vacancyController.updateVacancy);
+vacancyRouter.patch("/:id", vacancyController.changeStatusVacancy);
+vacancyRouter.delete("/:id", vacancyController.deleteVacancy);
 
-router.get('/:id', (req, res) => vacancyController.getVacancyById(req, res));
-
-router.post('/', (req, res) => vacancyController.createVacancy(req, res));
-
-router.put('/:id', (req, res) => vacancyController.updateVacancy(req, res));
-
-router.patch('/:id', (req, res) =>
-  vacancyController.changeStatusVacancy(req, res)
-);
-
-router.delete('/:id', (req, res) => vacancyController.deleteVacancy(req, res));
-
-export default router;
+export default vacancyRouter;
