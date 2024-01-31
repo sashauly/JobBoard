@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from ".prisma/client";
 import { faker } from "@faker-js/faker";
 import { v4 as uuid } from "uuid";
+import process from "process";
 
 const prisma = new PrismaClient();
 
