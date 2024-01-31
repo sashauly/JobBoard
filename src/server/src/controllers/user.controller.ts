@@ -36,8 +36,8 @@ export default {
   async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { name, username, password } = req.body;
-      await userService.updateUser(id, name, username, password);
+      const updatedData = req.body;
+      await userService.updateUser(id, updatedData);
       return res.status(HttpStatusCodes.OK).end();
     } catch (error) {
       next(error);
@@ -47,7 +47,7 @@ export default {
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      await userService.deleteUser(id);
+      const result = await userService.deleteUser(id);
       return res.status(HttpStatusCodes.OK).end();
     } catch (error) {
       next(error);
