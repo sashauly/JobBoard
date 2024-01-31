@@ -8,22 +8,25 @@
   "license": "MIT",
   "version": "1.0.0",
   "description": "",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
+    "build": "npm run clean && npx tsc",
+    "start": "npm run build && node dist/index.js",
     "dev": "nodemon src/index.ts",
+    "clean": "rm -rf dist",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "schema": "src/models/schema.prisma",
+    "seed": "ts-node src/models/seed.ts"
   },
   "keywords": [],
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.10.1",
+    "@types/node": "^20.11.13",
     "@types/uuid": "^9.0.7",
     "nodemon": "^3.0.1",
     "prisma": "^5.7.0",
