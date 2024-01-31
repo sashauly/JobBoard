@@ -1,31 +1,56 @@
-import { PrismaClient } from '@prisma/client';
+import { NextFunction, Request, Response } from "express";
 
-import { Request, Response } from 'express';
-
-const userClient = new PrismaClient().user;
+import HttpStatusCodes from "../constants/HttpStatusCodes";
+import userService from "../services/user.service";
 
 export default {
-  async getAllUsers(req: Request, res: Response) {
-    const users = await userClient.findMany({
-      include: { vacancies: true, applications: true },
-    });
-    res.json(users).status(200);
+  async getAllUsers(_: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await userService.getAllUsers();
+      return res.status(HttpStatusCodes.OK).json({ users });
+    } catch (error) {
+      next(error);
+    }
   },
 
-  async getUserById(req: Request, res: Response) {
-    const { id } = req.params;
-    const user = await userClient.findUnique({
-      where: { id },
-      include: { vacancies: true, applications: true },
-    });
-    res.json(user).status(200);
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const user = await userService.getUserById(id);
+      res.status(HttpStatusCodes.OK).json(user);
+    } catch (error) {
+      next(error);
+    }
   },
 
-  async createUser(req: Request, res: Response) {
-    const { name, username, password, role } = req.body;
-    const result = await userClient.create({
-      data: { name, username, password, role },
-    });
-    res.json(result).status(200);
+  async createUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name, username, password, role } = req.body;
+      await userService.createUser(name, username, password, role);
+      return res.status(HttpStatusCodes.CREATED).end();
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { name, username, password } = req.body;
+      await userService.updateUser(id, name, username, password);
+      return res.status(HttpStatusCodes.OK).end();
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await userService.deleteUser(id);
+      return res.status(HttpStatusCodes.OK).end();
+    } catch (error) {
+      next(error);
+    }
   },
 };
