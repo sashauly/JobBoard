@@ -74,9 +74,11 @@ export default {
 
   async changeStatusVacancy(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id, isActive } = req.params;
+      const { id } = req.params;
+      const candidate = await vacancyService.getVacancyById(id);
+      const currentStatus = candidate?.isActive;
       const result = await vacancyService.updateVacancy(id, {
-        isActive: JSON.parse(isActive),
+        isActive: !currentStatus,
       });
       res.status(HttpStatusCodes.OK).json(result);
     } catch (error) {
