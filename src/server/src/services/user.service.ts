@@ -1,5 +1,7 @@
 import { PrismaClient, User, Role } from "@prisma/client";
 import { validate as isValidUUID } from "uuid";
+import process from "process";
+import bcrypt from "bcrypt";
 
 import { ApiError } from "../classes/ApiError";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
@@ -46,18 +48,17 @@ export default {
         throw new ApiError(HttpStatusCodes.BAD_REQUEST, `${field} is missing`);
       }
     }
+    const hashedPassword = await bcrypt.hash(
+      password,
+      Number(process.env.SALT_ROUNDS)
+    );
     const result = await userClient.create({
-      data: { name, username, password, role },
+      data: { name, username, password: hashedPassword, role },
     });
     return result;
   },
 
-  async updateUser(
-    id: string,
-    name: string,
-    username: string,
-    password: string
-  ) {
+  async updateUser(id: string, updatedData: Partial<User>) {
     if (!id) {
       throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing id");
     }
@@ -67,15 +68,9 @@ export default {
         "Id must be a valid UUID"
       );
     }
-    const requiredFields = ["name", "username", "password"];
-    for (let field of requiredFields) {
-      if (!field) {
-        throw new ApiError(HttpStatusCodes.BAD_REQUEST, `${field} is missing`);
-      }
-    }
     const result = await userClient.update({
       where: { id },
-      data: { name, username, password },
+      data: updatedData,
     });
     return result;
   },

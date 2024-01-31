@@ -18,8 +18,7 @@
     "seed": "prisma db seed"
   },
   "prisma": {
-    "schema": "src/models/schema.prisma",
-    "seed": "ts-node src/models/seed.ts"
+    "schema": "src/models/schema.prisma"
   },
   "keywords": [],
   "devDependencies": {
@@ -35,6 +34,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
