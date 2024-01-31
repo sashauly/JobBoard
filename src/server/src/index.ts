@@ -1,21 +1,5 @@
-import express, { Application } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import router from './routes/vacancy.routes';
-import userRouter from './routes/user.routes';
+import server from "./server";
 
-dotenv.config();
+const port = process.env.PORT || 3000;
 
-const app: Application = express();
-const port = process.env.PORT || 8080;
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use('/api/vacancies', router);
-app.use('/api/users', userRouter);
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+server.listen(port, () => console.log(`Server running on port ${port}`));
