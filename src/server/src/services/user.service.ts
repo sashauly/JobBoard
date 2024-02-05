@@ -11,7 +11,7 @@ const userClient = new PrismaClient().user;
 export default {
   async getAllUsers(): Promise<User[]> {
     const users = await userClient.findMany({
-      include: { vacancies: true, applications: true },
+      include: { vacancies: true, applications: true, tokens: true },
     });
     return users;
   },
@@ -27,7 +27,7 @@ export default {
       );
     }
     const user = await userClient.findUnique({
-      where: { id },
+      where: { uid: id },
       include: { vacancies: true, applications: true },
     });
     if (!user) {
@@ -36,26 +36,25 @@ export default {
     return user;
   },
 
-  async createUser(
-    name: string,
-    username: string,
-    password: string,
-    role: Role
-  ) {
-    const requiredFields = ["name", "username", "password", "role"];
+  async getUserByEmail(email: string): Promise<User | null> {
+    const user = await userClient.findUnique({
+      where: { email },
+      include: { vacancies: true, applications: true },
+    });
+    return user;
+  },
+
+  async createUser(name: string, email: string, password: string, role: Role) {
+    const requiredFields = ["name", "email", "password", "role"];
     for (let field of requiredFields) {
       if (!field) {
         throw new ApiError(HttpStatusCodes.BAD_REQUEST, `${field} is missing`);
       }
     }
-    const hashedPassword = await bcrypt.hash(
-      password,
-      Number(process.env.SALT_ROUNDS)
-    );
-    const result = await userClient.create({
-      data: { name, username, password: hashedPassword, role },
+    const user = await userClient.create({
+      data: { name, email, password, role },
     });
-    return result;
+    return user;
   },
 
   async updateUser(id: string, updatedData: Partial<User>) {
@@ -69,7 +68,7 @@ export default {
       );
     }
     const result = await userClient.update({
-      where: { id },
+      where: { uid: id },
       data: updatedData,
     });
     return result;
@@ -86,7 +85,7 @@ export default {
       );
     }
     const result = await userClient.delete({
-      where: { id },
+      where: { uid: id },
     });
     return result;
   },

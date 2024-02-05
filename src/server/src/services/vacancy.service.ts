@@ -25,7 +25,7 @@ export default {
       );
     }
     const vacancy = await vacancyClient.findUnique({
-      where: { id },
+      where: { uid: id },
       include: { employer: true, Application: true },
     });
     if (!vacancy) {
@@ -57,7 +57,7 @@ export default {
         grade,
         tags,
         isActive,
-        employer: { connect: { id: employerId } },
+        employer: { connect: { uid: employerId } },
       },
     });
     return result;
@@ -74,7 +74,7 @@ export default {
       );
     }
     const result = await vacancyClient.update({
-      where: { id },
+      where: { uid: id },
       data: updatedData,
     });
     if (!result) {
@@ -94,7 +94,7 @@ export default {
       );
     }
     const result = await vacancyClient.delete({
-      where: { id },
+      where: { uid: id },
     });
     return result;
   },
