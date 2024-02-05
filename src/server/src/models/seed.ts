@@ -9,7 +9,7 @@ async function main() {
   const usersData = Array.from({ length: 5 }).map(() => ({
     id: uuid(),
     name: faker.person.fullName(),
-    username: faker.internet.userName(),
+    email: faker.internet.email(),
     password: faker.internet.password(),
     role: faker.helpers.arrayElement([Role.EMPLOYEE, Role.EMPLOYER]),
   }));
