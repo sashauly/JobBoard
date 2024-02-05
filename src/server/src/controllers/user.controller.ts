@@ -25,8 +25,8 @@ export default {
 
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, username, password, role } = req.body;
-      await userService.createUser(name, username, password, role);
+      const { name, email, password, role } = req.body;
+      await userService.createUser(name, email, password, role);
       return res.status(HttpStatusCodes.CREATED).end();
     } catch (error) {
       next(error);
