@@ -30,6 +30,8 @@ function errorHandler(
       status = HttpStatusCodes.BAD_REQUEST;
       message = "Invalid Input";
     }
+  } else {
+    message = err.message;
   }
   res.status(status).json({ status, message });
 }
