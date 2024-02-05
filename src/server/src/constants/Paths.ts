@@ -6,6 +6,7 @@ export default {
   Auth: {
     Base: "/auth",
     Register: "/register",
+    Refresh: "/refresh",
     Login: "/login",
     Logout: "/logout",
   },
