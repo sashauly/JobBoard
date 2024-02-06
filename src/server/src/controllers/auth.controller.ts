@@ -50,17 +50,15 @@ export default {
         user.uid,
         refreshTokenExpiresIn
       );
-      console.log("🚀 ~ login ~ accessToken:", accessToken);
-      console.log("🚀 ~ login ~ refreshToken:", refreshToken);
 
       res.set("Authorization", `Bearer ${accessToken}`);
 
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: accessTokenExpiresIn,
-      });
+      // res.cookie("accessToken", accessToken, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === "production",
+      //   sameSite: "strict",
+      //   maxAge: accessTokenExpiresIn,
+      // });
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
