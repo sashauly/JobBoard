@@ -18,8 +18,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Token" (
     "uid" UUID NOT NULL,
     "refreshToken" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "expirationDate" TIMESTAMP(3) NOT NULL,
     "userId" UUID NOT NULL,
 
     CONSTRAINT "Token_pkey" PRIMARY KEY ("uid")
@@ -54,6 +53,9 @@ CREATE TABLE "Application" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Token_refreshToken_key" ON "Token"("refreshToken");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Token_userId_refreshToken_key" ON "Token"("userId", "refreshToken");

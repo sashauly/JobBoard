@@ -29,12 +29,11 @@ model User {
 }
 
 model Token {
-  uid          String   @id @default(uuid()) @db.Uuid
-  refreshToken String
-  createdAt    DateTime @default(now())
-  expiresAt    DateTime
-  userId       String   @db.Uuid
-  user         User     @relation(fields: [userId], references: [uid])
+  uid            String   @id @default(uuid()) @db.Uuid
+  refreshToken   String   @unique
+  expirationDate DateTime
+  userId         String   @db.Uuid
+  user           User     @relation(fields: [userId], references: [uid])
 
   @@unique([userId, refreshToken])
 }
