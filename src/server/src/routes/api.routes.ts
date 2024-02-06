@@ -11,6 +11,6 @@ const apiRouter = Router();
 
 apiRouter.use(Paths.Auth.Base, authRouter);
 apiRouter.use(Paths.Users.Base, checkAuth, userRouter);
-apiRouter.use(Paths.Vacancies.Base, vacancyRouter);
+apiRouter.use(Paths.Vacancies.Base, checkAuth, vacancyRouter);
 
 export default apiRouter;
