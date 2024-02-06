@@ -11,7 +11,7 @@ const userClient = new PrismaClient().user;
 export default {
   async getAllUsers(): Promise<User[]> {
     const users = await userClient.findMany({
-      include: { vacancies: true, applications: true, tokens: true },
+      include: { vacancies: true, applications: true },
     });
     return users;
   },

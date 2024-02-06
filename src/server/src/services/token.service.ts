@@ -7,11 +7,6 @@ import HttpStatusCodes from "../constants/HttpStatusCodes";
 const tokenClient = new PrismaClient().token;
 
 export default {
-  async getAllTokens(): Promise<Token[]> {
-    const tokens = await tokenClient.findMany();
-    return tokens;
-  },
-
   async getTokenByUserId(userId: string, refreshToken: string): Promise<Token> {
     const token = await tokenClient.findUnique({
       where: {
@@ -44,7 +39,7 @@ export default {
       data: {
         userId,
         refreshToken,
-        expiresAt,
+        expirationDate: expiresAt,
       },
     });
     return token;
@@ -61,7 +56,7 @@ export default {
     });
   },
 
-  async deleteTokenByUserId(userId: string) {
+  async deleteTokenByUserId(userId: string, refreshToken: string) {
     if (!userId) {
       throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing id");
     }
@@ -71,9 +66,12 @@ export default {
         "Id must be a valid UUID"
       );
     }
-    await tokenClient.deleteMany({
+    await tokenClient.delete({
       where: {
-        userId,
+        userId_refreshToken: {
+          userId: userId,
+          refreshToken: refreshToken,
+        },
       },
     });
   },
