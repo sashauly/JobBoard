@@ -1,49 +1,60 @@
 import { sign, verify } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ApiError } from "../classes/ApiError";
+import HttpStatusCodes from "../constants/HttpStatusCodes";
 
-const accessTokenExpiresIn = parseFloat(
-  process.env.ACCESS_EXPIRES || "15 * 60 * 1000"
+const accessTokenExpiresIn = Number(
+  eval(process.env.ACCESS_EXPIRES || "15 * 60 * 1000")
 );
-const refreshTokenExpiresIn = parseFloat(
-  process.env.REFRESH_EXPIRES || "7 * 24 * 60 * 60 * 1000"
+const refreshTokenExpiresIn = Number(
+  eval(process.env.REFRESH_EXPIRES || "7 * 24 * 60 * 60 * 1000")
 );
 
 export default {
-  createAccessToken(userId: string, expiresIn: number = accessTokenExpiresIn) {
-    const secret = process.env.ACCESS_TOKEN_SECRET;
+  createAccessToken(userId: string) {
+    const secret = process.env.ACCESS_SECRET;
     if (!secret) {
-      throw new Error("ACCESS_TOKEN_SECRET is not set");
+      throw new ApiError(
+        HttpStatusCodes.BAD_REQUEST,
+        "ACCESS_SECRET is not set"
+      );
     }
     return sign({ userId }, secret, {
-      expiresIn,
+      expiresIn: accessTokenExpiresIn,
     });
   },
 
-  createRefreshToken(
-    userId: string,
-    expiresIn: number = refreshTokenExpiresIn
-  ) {
-    const secret = process.env.REFRESH_TOKEN_SECRET;
+  createRefreshToken(userId: string) {
+    const secret = process.env.REFRESH_SECRET;
     if (!secret) {
-      throw new Error("REFRESH_TOKEN_SECRET is not set");
+      throw new ApiError(
+        HttpStatusCodes.BAD_REQUEST,
+        "REFRESH_SECRET is not set"
+      );
     }
     return sign({ userId }, secret, {
-      expiresIn,
+      expiresIn: refreshTokenExpiresIn,
     });
   },
 
   verifyRefreshToken(refreshToken: string) {
-    const secret = process.env.REFRESH_TOKEN_SECRET;
+    const secret = process.env.REFRESH_SECRET;
     if (!secret) {
-      throw new Error("REFRESH_TOKEN_SECRET is not set");
+      throw new ApiError(
+        HttpStatusCodes.BAD_REQUEST,
+        "REFRESH_SECRET is not set"
+      );
     }
     return verify(refreshToken, secret);
   },
 
   verifyAccessToken(accessToken: string) {
-    const secret = process.env.ACCESS_TOKEN_SECRET;
+    const secret = process.env.ACCESS_SECRET;
     if (!secret) {
-      throw new Error("ACCESS_TOKEN_SECRET is not set");
+      throw new ApiError(
+        HttpStatusCodes.BAD_REQUEST,
+        "ACCESS_SECRET is not set"
+      );
     }
     return verify(accessToken, secret);
   },
@@ -51,7 +62,10 @@ export default {
   hashPassword(password: string) {
     const saltRounds = Number(process.env.SALT_ROUNDS);
     if (!Number.isInteger(saltRounds)) {
-      throw new Error("SALT_ROUNDS must be an integer");
+      throw new ApiError(
+        HttpStatusCodes.BAD_REQUEST,
+        "SALT_ROUNDS must be an integer"
+      );
     }
     return bcrypt.hashSync(password, saltRounds);
   },
