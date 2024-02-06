@@ -4,7 +4,7 @@ import HttpStatusCodes from "../constants/HttpStatusCodes";
 import { Request, Response, NextFunction } from "express";
 
 function checkAuth(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers["authorization"];
   if (!authHeader) {
     throw new ApiError(
       HttpStatusCodes.UNAUTHORIZED,
