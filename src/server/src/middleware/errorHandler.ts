@@ -19,21 +19,18 @@ function errorHandler(
     status = err.status;
     message = err.message;
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    message = err.message;
+    message = err?.meta?.cause as string;
     if (err.code === "P2002") {
       status = HttpStatusCodes.CONFLICT;
-      message = "Record Already Exists";
     } else if (err.code === "P2025") {
       status = HttpStatusCodes.NOT_FOUND;
-      message = "Record Not Found";
     } else if (err.code === "P2016") {
       status = HttpStatusCodes.BAD_REQUEST;
-      message = "Invalid Input";
     }
-  } else {
-    message = err.message;
   }
-  res.status(status).json({ status, message });
+  res
+    .status(status)
+    .json({ status, data: { error: message || err?.message || err } });
 }
 
 export default errorHandler;
