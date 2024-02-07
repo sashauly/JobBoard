@@ -1,13 +1,15 @@
 import { sign, verify } from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import ms from "ms";
+
 import { ApiError } from "../classes/ApiError";
 import HttpStatusCodes from "../constants/HttpStatusCodes";
 
 const accessTokenExpiresIn = Number(
-  eval(process.env.ACCESS_EXPIRES || "15 * 60 * 1000")
+  eval(process.env.ACCESS_EXP || "15 * 60 * 1000")
 );
 const refreshTokenExpiresIn = Number(
-  eval(process.env.REFRESH_EXPIRES || "7 * 24 * 60 * 60 * 1000")
+  eval(process.env.REFRESH_EXP || "7 * 24 * 60 * 60 * 1000")
 );
 
 export default {
@@ -20,7 +22,7 @@ export default {
       );
     }
     return sign({ userId }, secret, {
-      expiresIn: accessTokenExpiresIn,
+      expiresIn: ms(accessTokenExpiresIn),
     });
   },
 
@@ -33,7 +35,7 @@ export default {
       );
     }
     return sign({ userId }, secret, {
-      expiresIn: refreshTokenExpiresIn,
+      expiresIn: ms(refreshTokenExpiresIn),
     });
   },
 
