@@ -1,7 +1,9 @@
 import express, { Application } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import helmet from "helmet";
+import session from "express-session";
 
 import Paths from "./constants/Paths";
 import BaseRouter from "./routes/api.routes";
@@ -14,7 +16,26 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "secret",
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(helmet());
+}
 
 app.use(Paths.Base, BaseRouter);
 
