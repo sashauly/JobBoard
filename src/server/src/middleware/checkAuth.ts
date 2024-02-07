@@ -8,26 +8,27 @@ function checkAuth(req: Request, res: Response, next: NextFunction) {
   if (!authHeader) {
     throw new ApiError(
       HttpStatusCodes.UNAUTHORIZED,
-      "No access token provided"
+      "No authorization header provided"
     );
   }
   const accessToken = authHeader?.split(" ")[1];
   // const { accessToken } = req.cookies;
-  // if (!accessToken) {
-  //   throw new ApiError(
-  //     HttpStatusCodes.UNAUTHORIZED,
-  //     "No access token provided"
-  //   );
-  // }
+  if (!accessToken) {
+    throw new ApiError(
+      HttpStatusCodes.UNAUTHORIZED,
+      "No access token provided"
+    );
+  }
 
   try {
     const user = authUtils.verifyAccessToken(accessToken);
     res.locals.user = user;
     next();
   } catch (err) {
+    delete req.headers["authorization"];
     throw new ApiError(
       HttpStatusCodes.UNAUTHORIZED,
-      "Access token invalid, need to get a new one"
+      err as string || "Access token invalid, need to get a new one"
     );
   }
 }
