@@ -45,17 +45,6 @@ export default {
     return token;
   },
 
-  async deleteTokenByRefreshToken(refreshToken: string) {
-    if (!refreshToken) {
-      throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing refresh token");
-    }
-    await tokenClient.deleteMany({
-      where: {
-        refreshToken,
-      },
-    });
-  },
-
   async deleteTokenByUserId(userId: string, refreshToken: string) {
     if (!userId) {
       throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing id");

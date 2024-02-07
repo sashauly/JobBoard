@@ -8,10 +8,14 @@ import tokenService from "./token.service";
 
 export default {
   async register(name: string, email: string, password: string, role: Role) {
-    // const candidate = await userService.getUserByEmail(email);
-    // if (candidate) {
-    //   throw new ApiError(HttpStatusCodes.BAD_REQUEST, "User already exists");
-    // }
+    try {
+      const candidate = await userService.getUserByEmail(email);
+      if (candidate) {
+        throw new ApiError(HttpStatusCodes.BAD_REQUEST, "User already exists");
+      }
+    } catch (error) {
+      console.log(error);
+    }
     const hashedPassword = authUtils.hashPassword(password);
     const user = await userService.createUser(
       name,
@@ -27,20 +31,27 @@ export default {
     const refreshToken = authUtils.createRefreshToken(userId);
 
     const expiresAt = new Date(Date.now() + expiredIn); // 7 days from now in milliseconds
-    const token = await tokenService.createToken(
-      userId,
-      refreshToken,
-      expiresAt
-    );
+    try {
+      const token = await tokenService.createToken(
+        userId,
+        refreshToken,
+        expiresAt
+      );
+    } catch (error) {
+      throw new ApiError(
+        HttpStatusCodes.INTERNAL_SERVER_ERROR,
+        "Failed to create token"
+      );
+    }
 
     return { accessToken, refreshToken };
   },
 
-  async logout(refreshToken: string) {
+  async logout(userId: string, refreshToken: string) {
     if (!refreshToken) {
       throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing refresh token");
     }
-    const token = await tokenService.deleteTokenByRefreshToken(refreshToken);
+    const token = await tokenService.deleteTokenByUserId(userId, refreshToken);
     return token;
   },
 
