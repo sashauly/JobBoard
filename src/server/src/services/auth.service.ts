@@ -56,9 +56,6 @@ export default {
   },
 
   async refresh(refreshToken: string) {
-    if (!refreshToken) {
-      throw new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing refresh token");
-    }
     const decoded = authUtils.verifyRefreshToken(refreshToken) as Token;
     if (decoded.expirationDate < new Date()) {
       await tokenService.deleteTokenByUserId(decoded.userId, refreshToken);
