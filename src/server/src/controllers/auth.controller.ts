@@ -50,22 +50,23 @@ export default {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new ApiError(
-        HttpStatusCodes.BAD_REQUEST,
-        "Missing email or password"
+      return next(
+        new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing email or password")
       );
     }
     try {
       const user = await userService.getUserByEmail(email);
       if (!user) {
-        throw new ApiError(HttpStatusCodes.NOT_FOUND, "User not found");
+        return next(new ApiError(HttpStatusCodes.NOT_FOUND, "User not found"));
       }
       const isPasswordValid = await authUtils.comparePassword(
         password,
         user.password
       );
       if (!isPasswordValid) {
-        throw new ApiError(HttpStatusCodes.UNAUTHORIZED, "Invalid password");
+        return next(
+          new ApiError(HttpStatusCodes.UNAUTHORIZED, "Invalid password")
+        );
       }
       const { accessToken, refreshToken } = await authService.login(
         user.uid,
@@ -103,14 +104,13 @@ export default {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     const { refreshToken } = req.session;
+    if (!refreshToken) {
+      return next(
+        new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing refresh token")
+      );
+    }
     const { uid } = req.session.user || {};
     try {
-      if (!refreshToken) {
-        throw new ApiError(
-          HttpStatusCodes.BAD_REQUEST,
-          "Missing refresh token"
-        );
-      }
       await authService.logout(uid as string, refreshToken);
       // res.clearCookie("accessToken");
       // res.clearCookie("refreshToken");
@@ -129,7 +129,12 @@ export default {
   },
 
   async refresh(req: Request, res: Response, next: NextFunction) {
-    const { refreshToken } = req.cookies;
+    const { refreshToken } = req.session;
+    if (!refreshToken) {
+      return next(
+        new ApiError(HttpStatusCodes.BAD_REQUEST, "Missing refresh token")
+      );
+    }
     try {
       const newAccessToken = await authService.refresh(refreshToken);
       // res.clearCookie("accessToken");
