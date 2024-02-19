@@ -1,0 +1,39 @@
+.specific-vacancy-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+
+  border-radius: 0.5rem;
+  background-color: #242424;
+
+  gap: 1rem;
+}
+
+.top-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+
+  gap: 1rem;
+}
+
+.vacancy-base-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .title {
+    margin: 0;
+  }
+}
