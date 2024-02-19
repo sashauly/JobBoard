@@ -1,0 +1,22 @@
+.vacancy-card {
+  display: flex;
+
+  width: 100%;
+  padding: 1rem;
+
+  border-radius: 0.5rem;
+  background-color: #242424;
+}
+
+.vacancy-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+.vacancy-info h2,
+p {
+  margin: 0;
+}
