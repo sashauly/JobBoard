@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -8,6 +8,7 @@ import session from "express-session";
 import Paths from "./constants/Paths";
 import BaseRouter from "./routes/api.routes";
 import errorHandler from "./middleware/errorHandler";
+import HttpStatusCodes from "./constants/HttpStatusCodes";
 
 dotenv.config();
 
@@ -40,5 +41,14 @@ if (process.env.NODE_ENV === "production") {
 app.use(Paths.Base, BaseRouter);
 
 app.use(errorHandler);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(HttpStatusCodes.NOT_FOUND).json({
+    status: HttpStatusCodes.NOT_FOUND,
+    data: {
+      error: "Not found",
+    },
+  });
+});
 
 export default app;
